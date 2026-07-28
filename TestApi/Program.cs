@@ -34,8 +34,8 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast");
 
 app.MapGet("/hello", (string displayName) => $"Hello {displayName}!")
-   .WithName("HelloWorld");
-   
+   .WithName("HelloWorld with display name");
+
 
 app.Run();
 
