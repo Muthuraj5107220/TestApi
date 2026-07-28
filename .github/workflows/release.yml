@@ -3,7 +3,7 @@ name: test-api-cd
 on:
   push:
     branches:
-    - master
+      - master
   workflow_dispatch:
 
 jobs:
@@ -11,41 +11,41 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6.1.0
-      - name: Setup .NET Core SDK
-        uses: actions/setup-dotnet@v6.0.0
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x' # Replace with your target .NET version (e.g., 8.0.x, 9.0.x)
+
       - name: Restore dependencies
         run: dotnet restore
+
       - name: Build
-        run: dotnet build TestApi/TestApi.csproj --no-restore
+        run: dotnet build TestApi/TestApi.csproj -c Release --no-restore
+
       - name: Publish
-        run: dotnet publish TestApi/TestApi.csproj -c Release -o ${{ github.workspace }}/publish --no-build
+        run: dotnet publish TestApi/TestApi.csproj -c Release -o ./publish --no-build
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v4
         with:
           name: test-api-artifact
-          path: ${{ github.workspace }}/publish
-          
+          path: ./publish
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.1.0
+        uses: actions/download-artifact@v4
         with:
           name: test-api-artifact
+          path: ./publish
+
       - name: Azure WebApp
-        uses: actions/webapps-deploy@v3.0.8
+        uses: actions/azure-webapps-deploy@v3
         with:
           app-name: 'test-api-007'
+          package: ./publish
           publish-profile: ${{ secrets.PUBLISH_PROFILE }}
-
-
-
-
-
-
-
-
-
-        
