@@ -33,7 +33,7 @@ app.MapGet("/weatherforecast", () =>
 })
 .WithName("GetWeatherForecast");
 
-app.MapGet("/hello", () => "Hello World!")
+app.MapGet("/hello", (string displayName) => $"Hello {displayName}!")
    .WithName("HelloWorld");
 
 app.Run();
