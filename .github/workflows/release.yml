@@ -44,7 +44,7 @@ jobs:
           path: ./publish
 
       - name: Azure WebApp
-        uses: actions/azure-webapps-deploy@v3
+        uses: azure/webapps-deploy@v3
         with:
           app-name: 'test-api-007'
           package: ./publish
