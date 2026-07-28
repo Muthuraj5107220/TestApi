@@ -36,6 +36,7 @@ app.MapGet("/weatherforecast", () =>
 app.MapGet("/hello", (string displayName) => $"Hello {displayName}!")
    .WithName("HelloWorld with display");
 
+app.MapGet("/test", () => "Tesing end point." );
 
 app.Run();
 
