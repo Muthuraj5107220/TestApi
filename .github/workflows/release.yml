@@ -1,0 +1,51 @@
+name: test-api-cd
+
+on:
+  push:
+    branches:
+    - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.1.0
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v6.0.0
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --no-restore
+      - name: Publish
+        run: dotnet publish -o ${{env.DOTNET_ROOT}}/publish --no-build
+      - name: Upload a Build Artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: test-api-artifact
+          path: ${{env.DOTNET_ROOT}}/publish
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.1.0
+        with:
+          name: test-api-artifact
+      - name: Azure WebApp
+        uses: actions/webapps-deploy@v3.0.8
+        with:
+          app-name: 'test-api-007'
+          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
+
+
+
+
+
+
+
+
+
+        
